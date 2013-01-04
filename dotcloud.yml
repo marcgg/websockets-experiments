@@ -1,0 +1,10 @@
+www:
+  type: nodejs
+  approot: app
+  processes:
+    app: node app.js
+  config:
+    node_version: v0.8.x
+
+db:
+  type: mongodb

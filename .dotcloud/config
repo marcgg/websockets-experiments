@@ -1,0 +1,6 @@
+{
+    "push_branch": null, 
+    "application": "funfunfun", 
+    "version": "0.9.3", 
+    "push_protocol": "rsync"
+}
