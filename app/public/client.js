@@ -6,12 +6,12 @@ var socket = io.connect(url);
 
 function draw(world){
   var ctx = document.getElementById('main').getContext('2d')
-  //ctx.clearRect(0,0,300,300)
+  ctx.clearRect(0,0,400,400)
 
   for(var el in world){
     player = world[el]
     ctx.fillStyle = player.color
-    ctx.fillRect(player.x,player.y,5,5)
+    ctx.fillRect(player.x,player.y,20,20)
   }
   console.log("World redrawn")
 }
