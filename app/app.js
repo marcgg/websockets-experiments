@@ -4,17 +4,6 @@ var app = require('express')()
   , server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
 
-/* mongodb setup */
-/*var mongo = require('mongodb');
-var host = process.env['DOTCLOUD_DB_MONGODB_HOST'] || 'localhost';
-var port = process.env['DOTCLOUD_DB_MONGODB_PORT'] ||  27017;
-port = parseInt(port);
-var user = process.env['DOTCLOUD_DB_MONGODB_LOGIN'] || undefined;
-var pass = process.env['DOTCLOUD_DB_MONGODB_PASSWORD'] || undefined;
-var mongoServer = new mongo.Server(host, port, {});
-var db = new mongo.Db("test", mongoServer, {auto_reconnect:true});
-*/
-
 server.listen(8080);
 
 /* Basic Routes */
@@ -27,16 +16,35 @@ app.get('/client.js', function (req, res) {
 });
 
 
-/*
-db.open(function(err){
-    if(err) console.log(err);
+/* Game Engine */
+var world = {}
+var MOVEMENT = 4
 
-    if(user && pass) {
-        db.authenticate(user, pass, function(err) {
-            app.listen(8080);
-        });
+io.sockets.on('connection', function (socket) {
+  socket.on('start_game', function (name, fn) {
+    console.log("--> Socket " + socket.id + " joined the game")
+    world[socket.id] = {
+      id: socket.id,
+      x: 0,
+      y: 0,
+      color: "rgb("+Math.floor(Math.random()*250)+", "+Math.floor(Math.random()*250)+", "+Math.floor(Math.random()*250)+")"
     }
-    else {
-        app.listen(8080);
+    fn(world);
+  });
+
+  socket.on("move", function (name, fn) {
+    console.log("--> Socket " + socket.id + " moved of "+ name)
+    console.log(name)
+    if(name == 37){
+      world[socket.id].x -= MOVEMENT
+    }else if(name == 38){
+      world[socket.id].y -= MOVEMENT
+    }else if(name == 39){
+      world[socket.id].x += MOVEMENT
+    }else if(name == 40){
+      world[socket.id].y += MOVEMENT
     }
-});*/
+    socket.broadcast.emit('canvas_updated', world)
+    fn(world);
+  });
+});
