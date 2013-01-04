@@ -17,10 +17,21 @@
         height: 400px;
       }
       #connected span{
-        margin-right: 10px;
+        width: 50px;
+        display: inline-block;
+        font-weight:bold;
+      }
+      .targettrue{
+        border: 1px solid red;
+      }
+      .targetfalse{
+        border: 1px solid white;
       }
       #connected{
         margin-bottom: 20px;
+      }
+      .player{
+        padding: 0px 0px 5px 0px;
       }
     </style>
   </head>
@@ -38,8 +49,10 @@
         </div>
 
         <div id="chatbox" class="span6">
+          <h3>Scores</h3>
+          <table class="table" id="connected"></table>
+
           <h3>Chat</h3>
-          <div id="connected">Playing: </div>
           <input type="text" id="name" value="Player" style="width:80px"/>
           <input type="text" id="chat" placeholder="Speak" style="width:320px"/>
           <div id="speakers"></div>

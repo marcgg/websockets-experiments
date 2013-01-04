@@ -11,27 +11,41 @@ function draw(world){
   for(var el in world){
     player = world[el]
     ctx.fillStyle = player.color
-    ctx.fillRect(player.x,player.y,20,20)
+    ctx.fillRect(player.x,player.y,16,16)
+    if(player.target == 0){
+      ctx.clearRect(player.x+1,player.y+1,14,14);
+    }
+    $("#" + player.id).find(".target").html(player.target)
   }
   console.log("World redrawn")
 }
 
+var refreshingMutex = false
+
 function refreshConnected(world){
+  if(refreshingMutex) return false
+  refreshingMutex = true
   var $connected = $("#connected")
-  $("#connected span").remove()
+  $("#connected").html("")
   for(var el in world){
     player = world[el]
-    $connected.append("<span style='color:" + player.color + "'>" + player.name + "</span>")
+    html =  "<tr id='" + player.id + "' style='color:" + player.color + "'>"
+    html += "<td class='score'>" + player.score + "</td>"
+    html += "<td class='name'>" + player.name + "</td>"
+    html += "<td class='target'>" + player.target + "</td></tr>"
+    $connected.append(html)
   }
+  refreshingMutex = false
 }
 
 $(document).ready(function(){
   $(document).keyup(function(e){
-    socket.emit("move", e.keyCode, function(data){
-      if (e.keyCode == 37 ||e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40)
+    if (e.keyCode == 37 ||e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
+      socket.emit("move", e.keyCode, function(data){
         draw(data)
-    })
-  })
+      })
+    }
+  });
 
   $("#chat").keyup(function(e) {
     if(e.keyCode == 13){
