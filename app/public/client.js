@@ -25,6 +25,14 @@ $(document).ready(function(){
     })
   })
 
+  $("#chat").keyup(function(e) {
+    if(e.keyCode == 13){
+      socket.emit("speak", $("#chat").val())
+      $("#speakers").prepend("<div>Me: " + $("#chat").val() + "</div>")
+      $("#chat").val("")
+    }
+  })
+
   socket.on('connect', function () {
     socket.emit('start_game', null, function (data) {
       console.log("Game Started")
@@ -34,6 +42,10 @@ $(document).ready(function(){
     socket.on('canvas_updated', function(data){
       console.log("Canvas Updated")
       draw(data)
+    })
+
+    socket.on('chat_updated', function(data){
+      $("#speakers").prepend("<div>" + data + "</div>")
     })
   })
 

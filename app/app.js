@@ -21,6 +21,10 @@ var world = {}
 var MOVEMENT = 4
 
 io.sockets.on('connection', function (socket) {
+  socket.on("speak", function (name, fn) {
+    socket.broadcast.emit('chat_updated', "<span style='color:"+world[socket.id].color + "'>Player</span>: " + name)
+  })
+
   socket.on('start_game', function (name, fn) {
     console.log("--> Socket " + socket.id + " joined the game")
     world[socket.id] = {
