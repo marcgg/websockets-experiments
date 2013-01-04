@@ -1,10 +1,9 @@
-#Boiler plate stack Node.js & MongoDB
+# Websockets Experiments
 
-##What is this ?
-It is super easy to deploy any-stack on dotCloud, here is a tiny boiler plate to show you how simple and frustration-less dotCloud experience is.  
+This is just random code trying out the capabilities of websockets.
 
-##What you get
-In this boiler plate you will find the basic to get a Node.js and MongoDB stack running:
-* Use of the dotCoud environment
-* Communication with a database, MongoDB
-* Simple `dotCloud.yml` options: node's version, process management.
+Do not take it seriously!
+
+Run server:
+
+  supervisor -w app/app.js app/app.js
