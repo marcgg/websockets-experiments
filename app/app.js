@@ -22,7 +22,7 @@ var MOVEMENT = 4
 
 io.sockets.on('connection', function (socket) {
   socket.on("speak", function (name, fn) {
-    socket.broadcast.emit('chat_updated', "<span style='color:"+world[socket.id].color + "'>Player</span>: " + name)
+    socket.broadcast.emit('chat_updated', "<span style='color:"+world[socket.id].color + "'>"+name[0]+"</span>: " + name[1])
   })
 
   socket.on('start_game', function (name, fn) {

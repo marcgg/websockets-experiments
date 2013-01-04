@@ -27,7 +27,7 @@ $(document).ready(function(){
 
   $("#chat").keyup(function(e) {
     if(e.keyCode == 13){
-      socket.emit("speak", $("#chat").val())
+      socket.emit("speak", [$("#name").val(), $("#chat").val()])
       $("#speakers").prepend("<div>Me: " + $("#chat").val() + "</div>")
       $("#chat").val("")
     }

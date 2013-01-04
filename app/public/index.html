@@ -14,6 +14,16 @@
       canvas{
         border: 1px solid #666;
       }
+      #chatbox{
+        width: 500px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        border: 1px solid #666;
+        padding: 20px;
+        overflow:scroll;
+        height: 500px;
+      }
     </style>
   </head>
   <body>
@@ -22,7 +32,8 @@
     </canvas>
 
     <div id="chatbox">
-      <input type="text" id="chat" />
+      <input type="text" id="name" value="Player" />
+      <input type="text" id="chat" placeholder="Speak"/>
       <div id="speakers"></div>
     </div>
   </body>
