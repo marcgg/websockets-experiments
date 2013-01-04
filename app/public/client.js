@@ -16,8 +16,10 @@ function draw(world){
       ctx.clearRect(player.x+1,player.y+1,14,14);
     }
     $("#" + player.id).find(".target").html(player.target)
+    $("#" + player.id).find(".score").html(player.score)
   }
   console.log("World redrawn")
+  console.log(world)
 }
 
 var refreshingMutex = false
@@ -29,7 +31,7 @@ function refreshConnected(world){
   $("#connected").html("")
   for(var el in world){
     player = world[el]
-    html =  "<tr id='" + player.id + "' style='color:" + player.color + "'>"
+    html =  "<tr id='" + player.id + "' class='target-" + (player.target > 0)+ "' style='color:" + player.color + "'>"
     html += "<td class='score'>" + player.score + "</td>"
     html += "<td class='name'>" + player.name + "</td>"
     html += "<td class='target'>" + player.target + "</td></tr>"
@@ -63,8 +65,7 @@ $(document).ready(function(){
     })
 
     socket.on("players_updated", function(data){
-      console.log("players_updated")
-      console.log(data)
+      console.log("Players Updated")
       refreshConnected(data)
     })
 

@@ -105,6 +105,38 @@ io.sockets.on('connection', function (socket) {
       }
     }
 
+    if(local.target == 0){
+      var target = null
+      for(var el in world){
+        player = world[el]
+        if(player.target > 0){
+          target = player
+          break
+        }
+      }
+      if(
+        ( local.x == target.x || local.x == (target.x + MOVEMENT) || local.x == (target.x - MOVEMENT) )
+        && (local.y == target.y || local.y == (target.y + MOVEMENT) || local.y == (target.y - MOVEMENT) )
+      ){
+        local.score++
+        target.score--
+      }
+    }else{
+      for(var el in world){
+        console.log(el)
+        player = world[el]
+        if(player.target == 0){
+          if(
+            ( local.x == player.x || local.x == (player.x + MOVEMENT) || local.x == (player.x - MOVEMENT) )
+            && (local.y == player.y || local.y == (player.y + MOVEMENT) || local.y == (player.y - MOVEMENT) )
+          ){
+            player.score++
+            local.score--
+          }
+        }
+      }
+    }
+
     socket.broadcast.emit('canvas_updated', world)
     fn(world);
   });
