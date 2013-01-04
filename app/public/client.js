@@ -10,11 +10,19 @@ function draw(world){
 
   for(var el in world){
     player = world[el]
-    console.log(player)
     ctx.fillStyle = player.color
     ctx.fillRect(player.x,player.y,5,5)
   }
   console.log("World redrawn")
+}
+
+function refreshConnected(world){
+  var $connected = $("#connected")
+  $("#connected span").remove()
+  for(var el in world){
+    player = world[el]
+    $connected.append("<span style='color:" + player.color + "'>" + player.name + "</span>")
+  }
 }
 
 $(document).ready(function(){
@@ -37,6 +45,13 @@ $(document).ready(function(){
     socket.emit('start_game', null, function (data) {
       console.log("Game Started")
       draw(data)
+      refreshConnected(data)
+    })
+
+    socket.on("players_updated", function(data){
+      console.log("players_updated")
+      console.log(data)
+      refreshConnected(data)
     })
 
     socket.on('canvas_updated', function(data){

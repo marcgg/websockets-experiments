@@ -3,38 +3,48 @@
   <head>
     <meta charset='utf-8' />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link media="screen" type="text/css" href="/boostrap.css" rel="stylesheet" />
     <script type="text/javascript" src="/client.js"></script>
-    <title>Experiments</title>
+    <title>The Game That Is The Most Fun</title>
     <style>
-      #test{
-        position:absolute;width:30px; height:30px;
-        background-color:green;
-      }
       canvas{
-        border: 1px solid #666;
+        border: 1px solid #aaa;
+        margin-top: 20px;
       }
       #chatbox{
-        width: 500px;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        border: 1px solid #666;
-        padding: 20px;
         overflow:scroll;
         height: 500px;
+      }
+      #connected span{
+        margin-right: 10px;
+      }
+      #connected{
+        margin-bottom: 20px;
       }
     </style>
   </head>
   <body>
-    <h1>The Most Fun Ever Had</h1>
-    <canvas id="main" width=400 height=200>
-    </canvas>
+    <div class="container">
+      <div class="navbar" style="margin-top: 20px">
+        <div class="navbar-inner">
+          <a class="brand" href="#">The Most Fun</a>
+        </div>
+      </div>
 
-    <div id="chatbox">
-      <input type="text" id="name" value="Player" />
-      <input type="text" id="chat" placeholder="Speak"/>
-      <div id="speakers"></div>
+      <div class="row">
+        <div class="span6">
+          <canvas id="main" width=400 height=200></canvas>
+        </div>
+
+        <div id="chatbox" class="span6">
+          <h3>Chat</h3>
+          <div id="connected">Playing: </div>
+          <input type="text" id="name" value="Player" style="width:80px"/>
+          <input type="text" id="chat" placeholder="Speak" style="width:320px"/>
+          <div id="speakers"></div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
