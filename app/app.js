@@ -26,13 +26,16 @@ var MOVEMENT = 16
 var MAX_X = 380
 var MAX_Y = 380
 var HAS_TARGET = false
+var targets = []
+var targetRange = 0
 
 function decideTarget(){
   if(!HAS_TARGET){
-    console.log("------> DECIDING TARGET")
-    var keys = Object.keys(world);
-    if(keys.length == 0) return false
-    world[keys[Math.floor(keys.length * Math.random())]].target = 40
+    if(targetRange >= targets.length) targetRange = targets.length - 1
+    if(targetRange < 0) targetRange = 0
+    if(targets.length == 0) return false
+    world[targets[targetRange]].target = 40
+    targetRange = (targetRange + 1) % targets.length
   }
 }
 
@@ -47,12 +50,14 @@ io.sockets.on('connection', function (socket) {
     console.log("--> Socket " + socket.id + " left the game")
     if(world[socket.id] > 0) HAS_TARGET = false
     delete world[socket.id]
+    targets.pop(socket.id)
     decideTarget()
     socket.broadcast.emit('players_updated', world)
   });
 
   socket.on('start_game', function (name, fn) {
     console.log("--> Socket " + socket.id + " joined the game")
+    targets.push(socket.id)
     already_target = false
     for(var el in world){
       console.log(el)
@@ -114,6 +119,7 @@ io.sockets.on('connection', function (socket) {
           break
         }
       }
+      if(target == null) return false
       if(
         ( local.x == target.x || local.x == (target.x + MOVEMENT) || local.x == (target.x - MOVEMENT) )
         && (local.y == target.y || local.y == (target.y + MOVEMENT) || local.y == (target.y - MOVEMENT) )
