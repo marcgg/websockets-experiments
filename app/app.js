@@ -47,6 +47,11 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('players_updated', { world: world })
   })
 
+  socket.on("change_name", function (name, fn){
+    world[socket.id].name = name
+    io.sockets.emit('players_updated', { world: world })
+  })
+
   socket.on('disconnect', function(data) {
     if(world[socket.id] > 0) HAS_TARGET = false
     delete world[socket.id]

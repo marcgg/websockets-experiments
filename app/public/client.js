@@ -113,11 +113,17 @@ $(document).ready(function(){
       $speakers.animate({ scrollTop: $speakers.prop("scrollHeight") - $speakers.height() }, 100);
     }
   })
+  $("#name").keyup(function(e) {
+    if(e.keyCode == 13){
+      socket.emit("change_name", $("#name").val())
+    }
+  })
 
   socket.on('connect', function () {
     socket.emit('start_game', null, function (data) {
       console.log("Game Started")
       myself = data.you
+      $("#name").val("Player "+myself)
       draw(data)
       refreshConnected(data)
     })
