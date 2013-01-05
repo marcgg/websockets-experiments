@@ -19,26 +19,20 @@ app.get('/boostrap.css', function (req, res) {
   res.sendfile(__dirname + '/public/boostrap.css');
 });
 
-
 /* Game Engine */
 var world = {}
 var MOVEMENT = 16
 var MAX_X = 384
 var MAX_Y = 384
 var HAS_TARGET = false
-var targets = []
-var targetRange = 0
-var TARGET_MAX = 84
 var TIMER_MULTIPLE = 14
+var INVINCIBLE_FRAMES = 3
+var targets = []
 
-function decideTarget(){
-  if(!HAS_TARGET){
-    if(targetRange >= targets.length) targetRange = targets.length - 1
-    if(targetRange < 0) targetRange = 0
-    if(targets.length == 0) return false
-    world[targets[targetRange]].target = TARGET_MAX
-    targetRange = (targetRange + 1) % targets.length
-  }
+function setTarget(player){
+  if(player == null) return false
+  player.target = 1
+  player.invincible = INVINCIBLE_FRAMES
 }
 
 io.sockets.on('connection', function (socket) {
@@ -46,11 +40,6 @@ io.sockets.on('connection', function (socket) {
     world[socket.id].name = messages[0]
     socket.broadcast.emit('chat_updated', "<span style='color:"+world[socket.id].color + "'>" + messages[0] + "</span>: " + messages[1])
     io.sockets.emit('players_updated', { world: world })
-  })
-
-  socket.on("change_timer", function (timer, fn) {
-    TARGET_MAX = timer * TIMER_MULTIPLE
-    io.sockets.emit('timer_changed', timer)
   })
 
   socket.on("change_name", function (name, fn){
@@ -63,7 +52,7 @@ io.sockets.on('connection', function (socket) {
     delete world[socket.id]
     var index = targets.indexOf(socket.id)
     targets.splice(index,1)
-    decideTarget()
+    setTarget(targets[0])
     socket.broadcast.emit('players_updated', { world: world })
   });
 
@@ -83,13 +72,13 @@ io.sockets.on('connection', function (socket) {
     if(already_target){
       target_level = 0
     }else{
-      target_level = TARGET_MAX
+      target_level = 1
     }
     world[socket.id] = {
       id: socket.id,
       x: 0, y: 0,
-      score: 25,
-      target: target_level, last_target: false,
+      score: 0,
+      target: target_level, invincible: INVINCIBLE_FRAMES,
       name: "Player " + socket.id,
       color: "rgb("+Math.floor(Math.random()*220)+", "+Math.floor(Math.random()*220)+", "+Math.floor(Math.random()*220)+")"
     }
@@ -98,6 +87,7 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on("move", function (direction, fn) {
+    targetScored = false
     console.log("--> Socket " + socket.id + " moved of "+ direction)
     local = world[socket.id]
 
@@ -118,11 +108,15 @@ io.sockets.on('connection', function (socket) {
 
     //-> TARGET MANAGEMENT
     if(local.target > 0){
-      local.target -= 1
-      if(local.target == 0){
-        HAS_TARGET = false
-        decideTarget()
+      local.target++
+      if(local.target %30 == 0){
+        targetScored = true
+        local.score++
       }
+    }
+
+    if(local.invincible > 0){
+      local.invincible--
     }
 
     //-> COLISIONS
@@ -137,26 +131,36 @@ io.sockets.on('connection', function (socket) {
         }
       }
       if(target == null) return false
-      if(isHit(local, target)){
+      console.log("target.invincible:"+target.invincible)
+      if(target.invincible == 0 && isHit(local, target)){
         hit = local.id
         local.score++
-        target.score--
+        target.target = 0
+        target.invincible = 0
+        local.target = 1
+        local.invincible = INVINCIBLE_FRAMES
       }
     }else{
-      for(var el in world){
-        player = world[el]
-        if(player.target == 0){
-          if(isHit(local, player)){
-            hit = player.id
-            player.score++
-            local.score--
+      // YOU ARE THE TARGET
+      if(local.invincible == 0){
+        for(var el in world){
+          player = world[el]
+          if(player.id != local.id){
+            if(isHit(local, player)){
+              hit = player.id
+              player.score++
+              local.target = 0
+              local.invincible = 0
+              player.target = 1
+              player.invincible = INVINCIBLE_FRAMES
+            }
           }
         }
       }
     }
 
-    socket.broadcast.emit('canvas_updated', { world: world, hit: hit })
-    fn({ world: world, hit: hit });
+    socket.broadcast.emit('canvas_updated', { world: world, hit: hit, targetScored: targetScored })
+    fn({ world: world, hit: hit, targetScored: targetScored });
   });
 });
 
