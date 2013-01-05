@@ -6,7 +6,10 @@ if(document.location.host == "funfunfun-marcgg.dotcloud.com"){
 }
 var socket = io.connect(url);
 
-function draw(world){
+function draw(info){
+  var world = info.world
+  var hit = info.hit
+  console.log("HIT:" + hit)
   var ctx = document.getElementById('main').getContext('2d')
   ctx.clearRect(0,0,400,400)
 
@@ -31,7 +34,8 @@ function draw(world){
 
 var refreshingMutex = false
 
-function refreshConnected(world){
+function refreshConnected(info){
+  var world = info.world
   if(refreshingMutex) return false
   refreshingMutex = true
   var $connected = $("#connected")

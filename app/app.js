@@ -50,7 +50,7 @@ io.sockets.on('connection', function (socket) {
   socket.on("speak", function (messages, fn) {
     world[socket.id].name = messages[0]
     socket.broadcast.emit('chat_updated', "<span style='color:"+world[socket.id].color + "'>" + messages[0] + "</span>: " + messages[1])
-    io.sockets.emit('players_updated', world)
+    io.sockets.emit('players_updated', { world: world })
   })
 
   socket.on('disconnect', function(data) {
@@ -59,7 +59,7 @@ io.sockets.on('connection', function (socket) {
     var index = targets.indexOf(socket.id)
     targets.splice(index,1)
     decideTarget()
-    socket.broadcast.emit('players_updated', world)
+    socket.broadcast.emit('players_updated', { world: world })
   });
 
   socket.on('start_game', function (name, fn) {
@@ -86,15 +86,17 @@ io.sockets.on('connection', function (socket) {
       score: 25,
       target: target_level, last_target: false,
       name: "Player " + socket.id,
-      color: "rgb("+Math.floor(Math.random()*250)+", "+Math.floor(Math.random()*250)+", "+Math.floor(Math.random()*250)+")"
+      color: "rgb("+Math.floor(Math.random()*220)+", "+Math.floor(Math.random()*220)+", "+Math.floor(Math.random()*220)+")"
     }
-    socket.broadcast.emit('players_updated', world)
-    fn(world);
+    socket.broadcast.emit('players_updated', { world: world })
+    fn({ world: world });
   });
 
   socket.on("move", function (direction, fn) {
     console.log("--> Socket " + socket.id + " moved of "+ direction)
     local = world[socket.id]
+
+    //-> MOVING
     if(direction == 37){
       local.x -= MOVEMENT
     }else if(direction == 38){
@@ -109,6 +111,7 @@ io.sockets.on('connection', function (socket) {
     if(local.y < 0) local.y = 0
     if(local.x < 0) local.x = 0
 
+    //-> TARGET MANAGEMENT
     if(local.target > 0){
       local.target -= 1
       if(local.target == 0){
@@ -117,6 +120,8 @@ io.sockets.on('connection', function (socket) {
       }
     }
 
+    //-> COLISIONS
+    var hit = null
     if(local.target == 0){
       var target = null
       for(var el in world){
@@ -127,16 +132,17 @@ io.sockets.on('connection', function (socket) {
         }
       }
       if(target == null) return false
-      if(hit(local, target)){
+      if(isHit(local, target)){
+        hit = local.id
         local.score++
         target.score--
       }
     }else{
       for(var el in world){
-        console.log(el)
         player = world[el]
         if(player.target == 0){
-          if(hit(local, player)){
+          if(isHit(local, player)){
+            hit = local.id
             player.score++
             local.score--
           }
@@ -144,12 +150,12 @@ io.sockets.on('connection', function (socket) {
       }
     }
 
-    socket.broadcast.emit('canvas_updated', world)
-    fn(world);
+    socket.broadcast.emit('canvas_updated', { world: world, hit: hit })
+    fn({ world: world, hit: hit });
   });
 });
 
-function hit(first, second){
+function isHit(first, second){
   return ( first.x == second.x && first.y == second.y ) || ( first.x == second.x && first.y == second.y + MOVEMENT ) ||
   ( first.x == second.x && first.y == second.y - MOVEMENT ) || ( first.x == second.x + MOVEMENT && first.y == second.y ) ||
   ( first.x == second.x - MOVEMENT && first.y == second.y )
