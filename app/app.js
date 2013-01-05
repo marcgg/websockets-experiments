@@ -34,7 +34,7 @@ function decideTarget(){
     if(targetRange >= targets.length) targetRange = targets.length - 1
     if(targetRange < 0) targetRange = 0
     if(targets.length == 0) return false
-    world[targets[targetRange]].target = 40
+    world[targets[targetRange]].target = 50
     targetRange = (targetRange + 1) % targets.length
   }
 }
@@ -71,7 +71,7 @@ io.sockets.on('connection', function (socket) {
     if(already_target){
       target_level = 0
     }else{
-      target_level = 30
+      target_level = 50
     }
     world[socket.id] = {
       id: socket.id,
@@ -106,6 +106,7 @@ io.sockets.on('connection', function (socket) {
       local.target -= 1
       if(local.target == 0){
         HAS_TARGET = false
+        local.score += 5
         decideTarget()
       }
     }
