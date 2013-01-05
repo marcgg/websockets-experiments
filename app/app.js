@@ -23,8 +23,8 @@ app.get('/boostrap.css', function (req, res) {
 /* Game Engine */
 var world = {}
 var MOVEMENT = 16
-var MAX_X = 380
-var MAX_Y = 380
+var MAX_X = 384
+var MAX_Y = 384
 var HAS_TARGET = false
 var targets = []
 var targetRange = 0

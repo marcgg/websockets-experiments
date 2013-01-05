@@ -64,7 +64,7 @@ function showInfo(message, color){
   $info.show()
   $info.html(message)
   $info.attr("style", "color:"+color)
-  $info.fadeOut(700)
+  $info.fadeOut(1000)
 }
 
 var refreshingMutex = false
