@@ -28,7 +28,7 @@ var MAX_Y = 384
 var HAS_TARGET = false
 var targets = []
 var targetRange = 0
-var TARGET_MAX = 56
+var TARGET_MAX = 84
 var TIMER_MULTIPLE = 14
 
 function decideTarget(){

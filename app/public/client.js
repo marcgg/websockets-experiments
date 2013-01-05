@@ -1,5 +1,5 @@
 var url = "http://localhost:8080"
-var timer = 4
+var timer = 6
 var isProd = false
 if(document.location.host == "funfunfun-marcgg.dotcloud.com"){
   url = "funfunfun-marcgg.dotcloud.com"
@@ -81,9 +81,9 @@ function refreshConnected(info){
     html += "<td class='score-wrapper'><span class='badge score' style='background-color:"+player.color+"'>" + player.score + "</span></td>"
     html += "<td class='name'>" + player.name + "</td>"
     html += "<td class='change'></td>"
-    html += "<td class='target'>" + player.target + "</td>"
-    html += "<td class='x'>" + player.x + "</td>"
-    html += "<td class='y'>" + player.y + "</td></tr>"
+    html += "<td class='target admin'>" + player.target + "</td>"
+    html += "<td class='x admin'>" + player.x + "</td>"
+    html += "<td class='y admin'>" + player.y + "</td></tr>"
     $connected.append(html)
   }
   refreshingMutex = false
@@ -91,10 +91,18 @@ function refreshConnected(info){
 
 $(document).ready(function(){
   $info = $("#info")
+  isProd = true
 
   if(isProd){
-    $("#prodStyle").html(".x, .y, .target{ display: none; }")
+    $("#prodStyle").html(".admin{ display: none; }")
+    $(".admin").hide()
   }
+
+  $("#debug").click(function(e){
+    e.preventDefault()
+    $("#prodStyle").html("")
+    $(".admin").show()
+  })
 
   $(document).keyup(function(e){
     if (e.keyCode == 37 ||e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
