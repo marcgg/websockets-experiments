@@ -35,12 +35,6 @@ function decideTarget(){
     if(targetRange >= targets.length) targetRange = targets.length - 1
     if(targetRange < 0) targetRange = 0
     if(targets.length == 0) return false
-    console.log("targetRange="+targetRange)
-    console.log("targets[targetRange]: "+targets[targetRange])
-    for(var el in world){
-      player = world[el]
-      console.log("PLAYER: "+ player.id)
-    }
     world[targets[targetRange]].target = TARGET_MAX
     targetRange = (targetRange + 1) % targets.length
   }
@@ -89,7 +83,7 @@ io.sockets.on('connection', function (socket) {
       color: "rgb("+Math.floor(Math.random()*220)+", "+Math.floor(Math.random()*220)+", "+Math.floor(Math.random()*220)+")"
     }
     socket.broadcast.emit('players_updated', { world: world })
-    fn({ world: world });
+    fn({ world: world, you: socket.id });
   });
 
   socket.on("move", function (direction, fn) {
@@ -142,7 +136,7 @@ io.sockets.on('connection', function (socket) {
         player = world[el]
         if(player.target == 0){
           if(isHit(local, player)){
-            hit = local.id
+            hit = player.id
             player.score++
             local.score--
           }

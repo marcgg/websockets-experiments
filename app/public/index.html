@@ -22,35 +22,44 @@
       }
       #connected{
         margin-bottom: 20px;
+        margin-top: 40px;
       }
       .player{
         padding: 0px 0px 5px 0px;
       }
-      .score{
+      .score-wrapper{
+        width: 30px;
+        text-align:center
+      }
+      .change{
+        width: 130px;
       }
       #speakers{
         height: 170px;
         overflow: scroll;
+      }
+      #info-wrapper{
+        text-align: center;
+        font-size: 1.5em;
+        width: 400px;
+        overflow: hidden;
+        height: 25px;
+      }
+      .container{
+        margin-top: 20px;
       }
     </style>
     <style id="prodStyle"></style>
   </head>
   <body>
     <div class="container">
-      <div class="navbar" style="margin-top: 20px">
-        <div class="navbar-inner">
-          <a class="brand" href="#">The Most Fun</a>
-        </div>
-      </div>
-
       <div class="row">
         <div class="span6">
-          <h2 id="info">Let's go!</h2>
+          <div id="info-wrapper"><div id="info">Let's go!</div></div>
           <canvas id="main" width=396 height=396></canvas>
         </div>
 
         <div id="chatbox" class="span6">
-          <h4>Scores</h4>
           <table class="table" id="connected"></table>
 
           <h4>Chat</h4>
