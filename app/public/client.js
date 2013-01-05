@@ -15,8 +15,11 @@ function draw(world){
     if(player.target == 0){
       ctx.clearRect(player.x+1,player.y+1,14,14);
     }
-    $("#" + player.id).find(".target").html(player.target)
-    $("#" + player.id).find(".score").html(player.score)
+    $player = $("#" + player.id)
+    $player.find(".target").html(player.target)
+    $player.find(".score").html(player.score)
+    $player.find(".x").html(player.x)
+    $player.find(".y").html(player.y)
   }
   console.log("World redrawn")
   console.log(world)
@@ -34,7 +37,9 @@ function refreshConnected(world){
     html =  "<tr id='" + player.id + "' class='target-" + (player.target > 0)+ "' style='color:" + player.color + "'>"
     html += "<td class='score'>" + player.score + "</td>"
     html += "<td class='name'>" + player.name + "</td>"
-    html += "<td class='target'>" + player.target + "</td></tr>"
+    html += "<td class='target'>" + player.target + "</td>"
+    html += "<td class='x'>" + player.x + "</td>"
+    html += "<td class='y'>" + player.y + "</td></tr>"
     $connected.append(html)
   }
   refreshingMutex = false
