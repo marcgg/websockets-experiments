@@ -14,6 +14,8 @@ function draw(world){
     ctx.fillRect(player.x,player.y,16,16)
     if(player.target == 0){
       ctx.clearRect(player.x+1,player.y+1,14,14);
+    }else{
+      ctx.clearRect(player.x+1,player.y+1, 14 - Math.floor(player.target/4), 14 - Math.floor(player.target/4));
     }
     $player = $("#" + player.id)
     $player.find(".target").html(player.target)

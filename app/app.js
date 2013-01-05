@@ -28,6 +28,7 @@ var MAX_Y = 380
 var HAS_TARGET = false
 var targets = []
 var targetRange = 0
+var TARGET_MAX = 56
 
 function decideTarget(){
   if(!HAS_TARGET){
@@ -40,7 +41,7 @@ function decideTarget(){
       player = world[el]
       console.log("PLAYER: "+ player.id)
     }
-    world[targets[targetRange]].target = 50
+    world[targets[targetRange]].target = TARGET_MAX
     targetRange = (targetRange + 1) % targets.length
   }
 }
@@ -53,18 +54,10 @@ io.sockets.on('connection', function (socket) {
   })
 
   socket.on('disconnect', function(data) {
-    console.log("--> Socket " + socket.id + " left the game")
     if(world[socket.id] > 0) HAS_TARGET = false
     delete world[socket.id]
-    for(var i=0; i<targets.length;i++){
-      console.log("BEFORE TARGET "+i+" -> "+targets[i])
-    }
     var index = targets.indexOf(socket.id)
     targets.splice(index,1)
-    console.log("Removed socket "+socket.id+" from targets. Total size: "+ targets.length)
-    for(var i=0; i<targets.length;i++){
-      console.log("AFTER TARGET "+i+" -> "+targets[i])
-    }
     decideTarget()
     socket.broadcast.emit('players_updated', world)
   });
@@ -85,7 +78,7 @@ io.sockets.on('connection', function (socket) {
     if(already_target){
       target_level = 0
     }else{
-      target_level = 50
+      target_level = TARGET_MAX
     }
     world[socket.id] = {
       id: socket.id,
