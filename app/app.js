@@ -34,6 +34,12 @@ function decideTarget(){
     if(targetRange >= targets.length) targetRange = targets.length - 1
     if(targetRange < 0) targetRange = 0
     if(targets.length == 0) return false
+    console.log("targetRange="+targetRange)
+    console.log("targets[targetRange]: "+targets[targetRange])
+    for(var el in world){
+      player = world[el]
+      console.log("PLAYER: "+ player.id)
+    }
     world[targets[targetRange]].target = 50
     targetRange = (targetRange + 1) % targets.length
   }
@@ -50,7 +56,15 @@ io.sockets.on('connection', function (socket) {
     console.log("--> Socket " + socket.id + " left the game")
     if(world[socket.id] > 0) HAS_TARGET = false
     delete world[socket.id]
-    targets.pop(socket.id)
+    for(var i=0; i<targets.length;i++){
+      console.log("BEFORE TARGET "+i+" -> "+targets[i])
+    }
+    var index = targets.indexOf(socket.id)
+    targets.splice(index,1)
+    console.log("Removed socket "+socket.id+" from targets. Total size: "+ targets.length)
+    for(var i=0; i<targets.length;i++){
+      console.log("AFTER TARGET "+i+" -> "+targets[i])
+    }
     decideTarget()
     socket.broadcast.emit('players_updated', world)
   });
