@@ -29,6 +29,7 @@ var HAS_TARGET = false
 var targets = []
 var targetRange = 0
 var TARGET_MAX = 56
+var TIMER_MULTIPLE = 14
 
 function decideTarget(){
   if(!HAS_TARGET){
@@ -45,6 +46,11 @@ io.sockets.on('connection', function (socket) {
     world[socket.id].name = messages[0]
     socket.broadcast.emit('chat_updated', "<span style='color:"+world[socket.id].color + "'>" + messages[0] + "</span>: " + messages[1])
     io.sockets.emit('players_updated', { world: world })
+  })
+
+  socket.on("change_timer", function (timer, fn) {
+    TARGET_MAX = timer * TIMER_MULTIPLE
+    io.sockets.emit('timer_changed', timer)
   })
 
   socket.on("change_name", function (name, fn){

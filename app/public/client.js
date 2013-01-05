@@ -1,4 +1,5 @@
 var url = "http://localhost:8080"
+var timer = 4
 var isProd = false
 if(document.location.host == "funfunfun-marcgg.dotcloud.com"){
   url = "funfunfun-marcgg.dotcloud.com"
@@ -26,7 +27,7 @@ function draw(info){
     if(player.target == 0){
       ctx.clearRect(player.x+1,player.y+1,14,14);
     }else{
-      ctx.clearRect(player.x+1,player.y+1, 14 - Math.floor(player.target/4), 14 - Math.floor(player.target/4));
+      ctx.clearRect(player.x+1,player.y+1, 14 - Math.floor(player.target/timer), 14 - Math.floor(player.target/timer));
     }
 
     // SCORES PER PLAYER
@@ -91,7 +92,6 @@ function refreshConnected(info){
 $(document).ready(function(){
   $info = $("#info")
 
-  isProd = true
   if(isProd){
     $("#prodStyle").html(".x, .y, .target{ display: none; }")
   }
@@ -103,6 +103,13 @@ $(document).ready(function(){
       })
     }
   });
+
+  $("#timer").keyup(function(e){
+    if(e.keyCode == 13){
+      timer = parseInt($("#timer").val())
+      socket.emit("change_timer", timer)
+    }
+  })
 
   $("#chat").keyup(function(e) {
     if(e.keyCode == 13){
@@ -126,6 +133,11 @@ $(document).ready(function(){
       $("#name").val("Player "+myself)
       draw(data)
       refreshConnected(data)
+    })
+
+    socket.on("timer_changed", function (data) {
+      $("#timer").val(data)
+      timer = data
     })
 
     socket.on("players_updated", function(data){
