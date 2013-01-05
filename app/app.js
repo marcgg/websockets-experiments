@@ -122,8 +122,9 @@ io.sockets.on('connection', function (socket) {
       }
       if(target == null) return false
       if(
-        ( local.x == target.x || local.x == (target.x + MOVEMENT) || local.x == (target.x - MOVEMENT) )
-        && (local.y == target.y || local.y == (target.y + MOVEMENT) || local.y == (target.y - MOVEMENT) )
+        ( local.x == target.x && local.y == target.y ) || ( local.x == target.x && local.y == target.y + MOVEMENT ) ||
+        ( local.x == target.x && local.y == target.y - MOVEMENT ) || ( local.x == target.x + MOVEMENT && local.y == target.y ) ||
+        ( local.x == target.x - MOVEMENT && local.y == target.y )
       ){
         local.score++
         target.score--
@@ -134,8 +135,9 @@ io.sockets.on('connection', function (socket) {
         player = world[el]
         if(player.target == 0){
           if(
-            ( local.x == player.x || local.x == (player.x + MOVEMENT) || local.x == (player.x - MOVEMENT) )
-            && (local.y == player.y || local.y == (player.y + MOVEMENT) || local.y == (player.y - MOVEMENT) )
+            ( local.x == player.x && local.y == player.y ) || ( local.x == player.x && local.y == player.y + MOVEMENT ) ||
+            ( local.x == player.x && local.y == player.y - MOVEMENT ) || ( local.x == player.x + MOVEMENT && local.y == player.y ) ||
+            ( local.x == player.x - MOVEMENT && local.y == player.y )
           ){
             player.score++
             local.score--
