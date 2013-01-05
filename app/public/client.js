@@ -52,8 +52,10 @@ $(document).ready(function(){
   $("#chat").keyup(function(e) {
     if(e.keyCode == 13){
       socket.emit("speak", [$("#name").val(), $("#chat").val()])
-      $("#speakers").prepend("<div>Me: " + $("#chat").val() + "</div>")
+      var $speakers = $("#speakers")
+      $speakers.append("<div>Me: " + $("#chat").val() + "</div>")
       $("#chat").val("")
+      $speakers.animate({ scrollTop: $speakers.prop("scrollHeight") - $speakers.height() }, 100);
     }
   })
 
@@ -75,7 +77,9 @@ $(document).ready(function(){
     })
 
     socket.on('chat_updated', function(data){
-      $("#speakers").prepend("<div>" + data + "</div>")
+      var $speakers = $("#speakers")
+      $speakers.append("<div>" + data + "</div>")
+      $speakers.animate({ scrollTop: $speakers.prop("scrollHeight") - $speakers.height() }, 100);
     })
   })
 

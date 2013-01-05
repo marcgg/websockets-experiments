@@ -27,6 +27,10 @@
       .player{
         padding: 0px 0px 5px 0px;
       }
+      #speakers{
+        height: 170px;
+        overflow: scroll;
+      }
     </style>
   </head>
   <body>
@@ -43,13 +47,13 @@
         </div>
 
         <div id="chatbox" class="span6">
-          <h3>Scores</h3>
+          <h4>Scores</h4>
           <table class="table" id="connected"></table>
 
-          <h3>Chat</h3>
+          <h4>Chat</h4>
+          <div id="speakers"></div>
           <input type="text" id="name" value="Player" style="width:80px"/>
           <input type="text" id="chat" placeholder="Speak" style="width:320px"/>
-          <div id="speakers"></div>
         </div>
       </div>
     </div>

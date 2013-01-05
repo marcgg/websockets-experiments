@@ -72,7 +72,7 @@ io.sockets.on('connection', function (socket) {
       id: socket.id,
       x: 0, y: 0,
       score: 100,
-      target: target_level,
+      target: target_level, last_target: false,
       name: "Player " + socket.id,
       color: "rgb("+Math.floor(Math.random()*250)+", "+Math.floor(Math.random()*250)+", "+Math.floor(Math.random()*250)+")"
     }
