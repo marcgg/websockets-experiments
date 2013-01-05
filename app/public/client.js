@@ -1,6 +1,8 @@
 var url = "http://localhost:8080"
+var isProd = false
 if(document.location.host == "funfunfun-marcgg.dotcloud.com"){
   url = "funfunfun-marcgg.dotcloud.com"
+  isProd = true
 }
 var socket = io.connect(url);
 
@@ -37,7 +39,7 @@ function refreshConnected(world){
   for(var el in world){
     player = world[el]
     html =  "<tr id='" + player.id + "' class='target-" + (player.target > 0)+ "' style='color:" + player.color + "'>"
-    html += "<td class='score'>" + player.score + "</td>"
+    html += "<td class='score-wrapper'><span class='badge score' style='background-color:"+player.color+"'>" + player.score + "</span></td>"
     html += "<td class='name'>" + player.name + "</td>"
     html += "<td class='target'>" + player.target + "</td>"
     html += "<td class='x'>" + player.x + "</td>"
@@ -48,6 +50,11 @@ function refreshConnected(world){
 }
 
 $(document).ready(function(){
+  isProd = true
+  if(isProd){
+    $("#prodStyle").html(".x, .y, .target{ display: none; }")
+  }
+
   $(document).keyup(function(e){
     if (e.keyCode == 37 ||e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
       socket.emit("move", e.keyCode, function(data){

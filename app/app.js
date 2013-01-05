@@ -83,7 +83,7 @@ io.sockets.on('connection', function (socket) {
     world[socket.id] = {
       id: socket.id,
       x: 0, y: 0,
-      score: 100,
+      score: 25,
       target: target_level, last_target: false,
       name: "Player " + socket.id,
       color: "rgb("+Math.floor(Math.random()*250)+", "+Math.floor(Math.random()*250)+", "+Math.floor(Math.random()*250)+")"
@@ -113,7 +113,6 @@ io.sockets.on('connection', function (socket) {
       local.target -= 1
       if(local.target == 0){
         HAS_TARGET = false
-        local.score += 5
         decideTarget()
       }
     }
@@ -128,11 +127,7 @@ io.sockets.on('connection', function (socket) {
         }
       }
       if(target == null) return false
-      if(
-        ( local.x == target.x && local.y == target.y ) || ( local.x == target.x && local.y == target.y + MOVEMENT ) ||
-        ( local.x == target.x && local.y == target.y - MOVEMENT ) || ( local.x == target.x + MOVEMENT && local.y == target.y ) ||
-        ( local.x == target.x - MOVEMENT && local.y == target.y )
-      ){
+      if(hit(local, target)){
         local.score++
         target.score--
       }
@@ -141,11 +136,7 @@ io.sockets.on('connection', function (socket) {
         console.log(el)
         player = world[el]
         if(player.target == 0){
-          if(
-            ( local.x == player.x && local.y == player.y ) || ( local.x == player.x && local.y == player.y + MOVEMENT ) ||
-            ( local.x == player.x && local.y == player.y - MOVEMENT ) || ( local.x == player.x + MOVEMENT && local.y == player.y ) ||
-            ( local.x == player.x - MOVEMENT && local.y == player.y )
-          ){
+          if(hit(local, player)){
             player.score++
             local.score--
           }
@@ -157,3 +148,9 @@ io.sockets.on('connection', function (socket) {
     fn(world);
   });
 });
+
+function hit(first, second){
+  return ( first.x == second.x && first.y == second.y ) || ( first.x == second.x && first.y == second.y + MOVEMENT ) ||
+  ( first.x == second.x && first.y == second.y - MOVEMENT ) || ( first.x == second.x + MOVEMENT && first.y == second.y ) ||
+  ( first.x == second.x - MOVEMENT && first.y == second.y )
+}
