@@ -26,7 +26,7 @@ var MAX_X = 384
 var MAX_Y = 384
 var HAS_TARGET = false
 var TIMER_MULTIPLE = 14
-var INVINCIBLE_FRAMES = 3
+var INVINCIBLE_FRAMES = 7
 var targets = []
 
 function setTarget(player){

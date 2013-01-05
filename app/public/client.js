@@ -28,7 +28,9 @@ function draw(info){
     if(player.target == 0){
       ctx.clearRect(player.x+1,player.y+1,14,14);
     }else{
-      //ctx.clearRect(player.x+1,player.y+1, 14 - Math.floor(player.target/timer), 14 - Math.floor(player.target/timer));
+      if(player.invincible > 0){
+        ctx.clearRect(player.x+1,player.y+1, player.invincible*2, player.invincible*2);
+      }
     }
 
     // SCORES PER PLAYER
@@ -48,7 +50,6 @@ function draw(info){
 
     if(hit == myself){
       showInfo("You hit the target!", "#55aa22")
-    }else if(world[myself].target == 0){
     }else{
       showInfo(world[hit].name + " hit you", "red")
     }
